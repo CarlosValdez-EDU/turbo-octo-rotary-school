@@ -1,3 +1,10 @@
+/* eslint-disable no-labels */
+/* eslint-disable no-sparse-arrays */
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable no-undef */
+/* eslint-disable consistent-this */
+/* eslint-disable eqeqeq */
+/* eslint-disable react-native/no-inline-styles */
 import _ from 'lodash';
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
@@ -11,13 +18,11 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Dimensions,
-  Modal as RNModal,
   Animated,
   Easing,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import {Background, Button, Container} from '@components/common';
-import AlertHtml from '../common/AlertHtml';
 import Validation from '../common/Validation';
 import Orientation from 'react-native-orientation';
 import stylesPortrait from './stylesheetPortrait';
@@ -30,7 +35,6 @@ import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
 import ProgressIndicator from '@components/common/ProgressIndicator';
 import Loc from '@components/common/Loc/Loc';
 import WebViewBridge from 'react-native-webview-bridge';
-const androidHtml = require('@assets/editor/and/index.html');
 const iosHtml = require('@assets/editor/ios/index.html');
 const isAndroid = Platform.OS === 'android';
 import TasksComponent from './TasksComponent';
@@ -75,8 +79,6 @@ import {AdMobRewarded} from 'react-native-admob';
 import isSpuClass from '@utils/SpuClassValidator';
 import Alert from '../common/Alert';
 
-this.NextShimmer = false;
-
 const VideoRoute = () => (
   <View style={{padding: 30}}>
     <ScrollView>
@@ -100,7 +102,7 @@ class CourseComponent extends Component {
   constructor(props) {
     super(props);
 
-    this.animatedValue = new Animated.Value(0);;
+    this.animatedValue = new Animated.Value(0);
 
     const initial = Orientation.getInitialOrientation();
     if (initial === 'PORTRAIT') {
@@ -150,16 +152,16 @@ class CourseComponent extends Component {
   }
 
   animate() {
-    this.animatedValue.setValue(0);;
+    this.animatedValue.setValue(0);
     Animated.timing(this.animatedValue, {
       toValue: 1,
       duration: 2000,
       easing: Easing.linear,
-    }).start(() => this.animate());;
+    }).start(() => this.animate());
   }
 
   componentDidMount() {
-    this.animate();;
+    this.animate();
     // this.props.quizFinishedStatus(false);
     // this.props.quizFinished(false);
 
@@ -175,7 +177,7 @@ class CourseComponent extends Component {
     Orientation.addOrientationListener(this._orientationDidChange);
     this.curriculumId = this.props.navigation.getParam(
       'CLASS_VIEW_CONTENT_ID',
-      ''
+      '',
     );
     this.isClassFinished = this.props.navigation.getParam(
       'IS_CLASS_FINISHED',
@@ -215,20 +217,20 @@ class CourseComponent extends Component {
     if (orientation === 'LANDSCAPE') {
       this.styles = stylesLandscape;
       this.setState({
-        fullscreenStatus: !this.state.fullscreenStatus,,
+        fullscreenStatus: !this.state.fullscreenStatus,
       });
       this.forceUpdate();
     } else {
       this.styles = stylesPortrait;
       this.setState({
-        fullscreenStatus: !this.state.fullscreenStatus,,
+        fullscreenStatus: !this.state.fullscreenStatus,
       });
       this.forceUpdate();
     }
   };
 
   async componentWillUnmount() {
-    Orientation.getOrientation((err, orientation) => {
+    Orientation.getOrientation((_err, orientation) => {
       console.log(`Current Device Orientation: ${orientation}`);
     });
 
@@ -330,7 +332,9 @@ class CourseComponent extends Component {
   }
 
   sendValue() {
-    if (!this.props.exerciseData) {return;}
+    if (!this.props.exerciseData) {
+      return;
+    }
     if (this.props.exerciseData.hasOwnProperty('userData')) {
       var code = this.props.exerciseData.userData.code.replace(/\n/g, 'ø');
       this.iosWebview.sendToBridge('value:test');
@@ -678,7 +682,7 @@ class CourseComponent extends Component {
         onPress={() => this.setState({btnSelected: this.TabContent.code})}>
         {Loc.getInstance().TextFor('codeScreen.codeTab', this.props)}
       </Button>
-    );;
+    );
   }
 
   renderCodeTab() {
@@ -788,7 +792,7 @@ class CourseComponent extends Component {
       indexCurrent !== -1
     ) {
       nextVisible = true;
-      var quizCompletedData = this.props.exerciseData.userData;;
+      var quizCompletedData = this.props.exerciseData.userData;
       let quizCompleted = _.get(quizCompletedData, 'complete');
       if (quizCompleted == true) {
         this.props.quizFinishedStatus(true);
@@ -838,9 +842,13 @@ class CourseComponent extends Component {
           shimmerNext = true;
         }
 
-        if (this.NextShimmer) {shimmerNext = true;}
+        if (this.NextShimmer) {
+          shimmerNext = true;
+        }
 
-        if (locked) {nextVisible = false;}
+        if (locked) {
+          nextVisible = false;
+        }
       }
     }
 
@@ -931,7 +939,7 @@ class CourseComponent extends Component {
         titleKey="quizScreen.quizAlertTittle"
         messageKey="quizScreen.quizAlertBody"
       />
-    );;
+    );
   }
 
   async goToExercise() {
@@ -942,7 +950,9 @@ class CourseComponent extends Component {
     let indexCurrent = _.findIndex(this.props.originalData, {
       _id: this.props.exerciseData._id,
     });
-    if (this.props.originalData[indexCurrent + 1].type === 'p') {indexCurrent++;}
+    if (this.props.originalData[indexCurrent + 1].type === 'p') {
+      indexCurrent++;
+    }
     const classId = this.props.classId;
     const unitId = this.props.originalData[indexCurrent + 1]._id;
     const trialMode = this.props.originalData[indexCurrent + 1].trialMode;
@@ -1038,7 +1048,9 @@ class CourseComponent extends Component {
     let indexCurrent = _.findIndex(this.props.originalData, {
       _id: this.props.exerciseData._id,
     });
-    if (this.props.originalData[indexCurrent - 1].type === 'p') {indexCurrent--;}
+    if (this.props.originalData[indexCurrent - 1].type === 'p') {
+      indexCurrent--;
+    }
     const classId = this.props.classId;
     const unitId = this.props.originalData[indexCurrent - 1]._id;
     const trialMode = this.props.originalData[indexCurrent - 1].trialMode;
@@ -1283,7 +1295,7 @@ class CourseComponent extends Component {
                     zIndex: 1,
                     width: '100%',
                     height: '100%',
-                  },,
+                  },
                 ]}>
                 <TasksComponent />
               </View>
@@ -1298,7 +1310,8 @@ class CourseComponent extends Component {
                     zIndex: 1,
                     width: '100%',
                     height: '100%',
-                  },,
+                  },
+                  ,
                 ]}>
                 <TipsComponent />
               </View>
@@ -1313,7 +1326,8 @@ class CourseComponent extends Component {
                     zIndex: 1,
                     width: '100%',
                     height: '100%',
-                  },,
+                  },
+                  ,
                 ]}>
                 <SolutionComponent />
               </View>
