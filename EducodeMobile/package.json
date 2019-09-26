@@ -56,6 +56,7 @@
     "react-native-vector-icons": "^6.6.0",
     "react-native-video": "^5.0.2",
     "react-native-view-pdf": "^0.10.1",
+    "react-native-webview-bridge": "^0.40.1",
     "react-navigation": "^4.0.10",
     "react-redux": "^7.1.1",
     "realm": "^3.1.0",
