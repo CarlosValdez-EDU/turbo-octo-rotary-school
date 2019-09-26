@@ -2,6 +2,9 @@
   package="com.educodemobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BILLING" />
 
     <application
       android:name=".MainApplication"
@@ -9,7 +12,13 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:windowSoftInputMode="adjustResize"
+      android:largeHeap="true"
+        >
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8615904654063679~4225794084"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
