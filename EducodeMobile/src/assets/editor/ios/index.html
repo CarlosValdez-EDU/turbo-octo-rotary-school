@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+</head>
+
+<body style="background-color: #1E1E1E">
+	<div id="container" style="width:100%;height:380px; margin-top: -8px;"></div>
+	<p>Messages received from React Native: 0</p>
+	<p>(No messages)</p>
+
+	<!-- OR ANY OTHER AMD LOADER HERE INSTEAD OF loader.js -->
+	<script src="./monaco-editor/min/vs/loader.js"></script>
+	<script src="./webViewBridge.js"></script>
+	<script>
+
+		// document.addEventListener('keydown', (event) => {
+		// 	const keyName = event.keyCode;
+
+		// 	if (keyName === 'Control') {
+		// 		// do not alert when only Control key is pressed.
+		// 		return;
+		// 	}
+
+		// 	if (event.ctrlKey) {
+		// 		// Even though event.key is not 'Control' (e.g., 'a' is pressed),
+		// 		// event.ctrlKey may be true if Ctrl key is pressed at the same time.
+		// 		alert(`Combination of ctrlKey + ${keyName}`);
+		// 	} else {
+		// 		if (WebViewBridge) {
+		// 			WebViewBridge.send(`Key pressed ${keyName}`);
+		// 		}
+		// 		alert(`Key pressed ${keyName}`);
+		// 	}
+		// }, false);
+
+		require.config({ paths: { 'vs': './monaco-editor/min/vs' } });
+
+		var theEditor;
+		var edModel;
+
+		// require(['vs/editor/editor.main'], function () {
+
+		// 	edModel = monaco.editor.createModel('hello', "javascript");
+		// 	theEditor = monaco.editor.create(document.getElementById('container'), {
+		// 		model: edModel
+		// 	});
+		// 	monaco.editor.setTheme('vs-dark');
+		// 	theEditor.onDidChangeModelContent(function (e) {
+		// 		if (WebViewBridge) {
+		// 			var value = theEditor.getValue();
+		// 			WebViewBridge.send(value);
+		// 		}
+		// 	});
+		// });
+
+
+		require(['vs/editor/editor.main'], function () {
+
+			// Register a new language
+			monaco.languages.register({ id: 'cosa' });
+
+			// Register a tokens provider for the language
+			monaco.languages.setMonarchTokensProvider('cosa', {
+				tokenizer: {
+					root: [
+						[/forward/, "custom-function"],
+					]
+				}
+			});
+
+			// Define a new theme that contains only rules that match this language
+			// monaco.editor.defineTheme('testTheme', {
+			// 	base: 'vs-dark',
+			// 	inherit: true,
+			// 	rules: [
+			// 		{ token: 'custom-function', foreground: '#364AF6' },
+			// 	]
+			// });
+
+			monaco.editor.defineTheme('myCustomTheme', {
+				base: 'vs', // can also be vs-dark or hc-black
+				inherit: true, // can also be false to completely replace the builtin rules
+				rules: [
+					{ token: 'comment', foreground: 'ffa500', fontStyle: 'italic underline' },
+					{ token: 'comment.js', foreground: '008800', fontStyle: 'bold' },
+					{ token: 'comment.css', foreground: '0000ff' } // will inherit fontStyle from `comment` above
+				]
+			});
+
+			// Register a completion item provider for the new language
+			monaco.languages.registerCompletionItemProvider('javascript', {
+				provideCompletionItems: () => {
+					return [
+						{
+							label: 'forward',
+							kind: monaco.languages.CompletionItemKind.Function,
+							insertText: {
+								value: 'forward()'
+							}
+						},
+						{
+							label: 'robot',
+							kind: monaco.languages.CompletionItemKind.Class,
+							insertText: {
+								value: 'robot.'
+							}
+						},
+					]
+				}
+			});
+
+
+			edModel = monaco.editor.createModel('', "javascript");
+			theEditor = monaco.editor.create(document.getElementById('container'), {
+				model: edModel,
+				theme: 'vs-dark'
+			});
+			theEditor.onDidChangeModelContent(function (e) {
+				if (WebViewBridge) {
+					if (theEditor.getValue().includes('ø')) {
+						let originalValue = theEditor.getValue();
+						let deletingNewLine = originalValue.replace(/øœ/g, '');
+						let after = deletingNewLine.replace(/ø/g, '\n');
+						if (after != originalValue) {
+							theEditor.setValue(after);
+							return;
+						}
+					} else if (theEditor.getValue().includes('œ')) {
+						WebViewBridge.send('deletingChar');
+						let originalValue = theEditor.getValue();
+						let after = originalValue.replace(/.œ/g, '');
+						if (after != originalValue) {
+							theEditor.setValue(after);
+							return;
+						}
+					}
+					let newValue = theEditor.getValue();
+					WebViewBridge.send(newValue);
+				}
+			});
+
+			// theEditor = monaco.editor.create(document.getElementById('container'), {
+			// 	value: 'function x() {\n\tconsole.log("Hello world!");\n}',
+			// 	language: 'cosa',
+			// 	theme: 'vs-dark'
+			// });
+			// theEditor.onDidChangeModelContent(function (e) {
+			// 	if (WebViewBridge) {
+			// 		var originalValue = theEditor.getValue();
+			// 		var after = originalValue.replace(/ø/g, '\n');
+			// 		if (after != originalValue) {
+			// 			theEditor.setValue(after);
+			// 			return;
+			// 		}
+			// 		var newValue = theEditor.getValue();
+			// 		WebViewBridge.send(newValue);
+			// 	}
+			// });
+		});
+	</script>
+</body>
+
+</html>

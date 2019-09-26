@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+</head>
+
+<body>
+    <h1 id="badassh1">HHHHHH</h1>
+    <script>
+        document.addEventListener("message", function (event) {
+            // window.postMessage("Sending data from WebView");
+            document.getElementById("badassh1").innerHTML = event.data;
+            window.postMessage("Sending data from WebView");
+        });
+    </script>
+</body>
+
+</html>
